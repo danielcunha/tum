@@ -4,13 +4,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>samza</groupId>
-    <artifactId>samza-example-parent</artifactId>
-    <version>0.7.0</version>
+    <groupId>tum</groupId>
+    <artifactId>tum-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>samza-wikipedia</artifactId>
-  <name>Samza Wikipedia Example</name>
+  <artifactId>tum-wikipedia</artifactId>
+  <name>Tum Wikipedia Example</name>
   <packaging>jar</packaging>
 
   <dependencies>

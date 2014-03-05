@@ -41,7 +41,7 @@ public class WikipediaConsumer extends BlockingEnvelopeMap implements WikipediaF
   }
 
   public void onEvent(final WikipediaFeedEvent event) {
-    SystemStreamPartition systemStreamPartition = new SystemStreamPartition(systemName, event.getChannel(), new Partition(0));
+    SystemStreamPartition systemStreamPartition = new SystemStreamPartition(systemName, "tum", new Partition(0));
 
     try {
       put(systemStreamPartition, new IncomingMessageEnvelope(systemStreamPartition, null, null, event));
@@ -61,9 +61,7 @@ public class WikipediaConsumer extends BlockingEnvelopeMap implements WikipediaF
   public void start() {
     feed.start();
 
-    for (String channel : channels) {
-      feed.listen(channel, this);
-    }
+	feed.listen(this);
   }
 
   @Override
