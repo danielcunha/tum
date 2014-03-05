@@ -1,0 +1,6 @@
+/media/comum/work/workspaces/labs/hello-samza/samza-wikipedia/src/main/java/samza/examples/wikipedia/system/WikipediaSystemFactory.java
+/media/comum/work/workspaces/labs/hello-samza/samza-wikipedia/src/main/java/samza/examples/wikipedia/task/WikipediaStatsStreamTask.java
+/media/comum/work/workspaces/labs/hello-samza/samza-wikipedia/src/main/java/samza/examples/wikipedia/task/WikipediaParserStreamTask.java
+/media/comum/work/workspaces/labs/hello-samza/samza-wikipedia/src/main/java/samza/examples/wikipedia/system/WikipediaConsumer.java
+/media/comum/work/workspaces/labs/hello-samza/samza-wikipedia/src/main/java/samza/examples/wikipedia/task/WikipediaFeedStreamTask.java
+/media/comum/work/workspaces/labs/hello-samza/samza-wikipedia/src/main/java/samza/examples/wikipedia/system/WikipediaFeed.java

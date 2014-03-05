@@ -1,0 +1,10 @@
+samza/examples/wikipedia/system/WikipediaConsumer.class
+samza/examples/wikipedia/system/WikipediaFeed$WikipediaFeedIrcListener.class
+samza/examples/wikipedia/task/WikipediaFeedStreamTask.class
+samza/examples/wikipedia/system/WikipediaFeed$1.class
+samza/examples/wikipedia/system/WikipediaSystemFactory.class
+samza/examples/wikipedia/task/WikipediaParserStreamTask.class
+samza/examples/wikipedia/system/WikipediaFeed.class
+samza/examples/wikipedia/system/WikipediaFeed$WikipediaFeedEvent.class
+samza/examples/wikipedia/system/WikipediaFeed$WikipediaFeedListener.class
+samza/examples/wikipedia/task/WikipediaStatsStreamTask.class
