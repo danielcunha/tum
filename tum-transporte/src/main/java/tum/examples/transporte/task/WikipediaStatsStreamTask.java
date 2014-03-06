@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package samza.examples.wikipedia.task;
+package tum.examples.transporte.task;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,7 +67,7 @@ public class WikipediaStatsStreamTask implements StreamTask, WindowableTask {
     counts.put("bytes-added", byteDiff);
     counts.put("unique-titles", titles.size());
 
-    collector.send(new OutgoingMessageEnvelope(new SystemStream("kafka", "wikipedia-stats"), counts));
+    collector.send(new OutgoingMessageEnvelope(new SystemStream("kafka", "transporte-stats"), counts));
 
     // Reset counts after windowing.
     edits = 0;

@@ -9,15 +9,11 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tum-wikipedia</artifactId>
-  <name>Tum Wikipedia Example</name>
+  <artifactId>tum-transporte</artifactId>
+  <name>Tum Transporte Example</name>
   <packaging>jar</packaging>
 
   <dependencies>
-    <dependency>
-      <groupId>org.schwering</groupId>
-      <artifactId>irclib</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.apache.samza</groupId>
       <artifactId>samza-api</artifactId>

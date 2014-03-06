@@ -12,13 +12,13 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Tum Parent</name>
- 
+
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>tum</groupId>
-        <artifactId>tum-wikipedia</artifactId>
-        <version>0.7.0</version>
+        <artifactId>tum-transporte</artifactId>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.samza</groupId>
@@ -87,35 +87,8 @@
 
   <modules>
     <module>samza-job-package</module>
-    <module>samza-wikipedia</module>
+    <module>tum-transorte</module>
   </modules>
-
-  <developers>
-    <developer>
-      <name>Chris Riccomini</name>
-      <email>criccomini@gmail.com</email>
-      <timezone>-8</timezone>
-    </developer>
-  </developers>
-
-  <licenses>
-    <license>
-      <name>Apache License 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <scm>
-    <connection>scm:git:git://github.com/linkedin/hello-samza.git</connection>
-    <developerConnection>scm:git:git@github.com:linkedin/hello-samza.git</developerConnection>
-    <url>http://github.com/linkedin/hello-samza/</url>
-  </scm>
-
-  <issueManagement>
-    <system>github</system>
-    <url>http://github.com/linkedin/hello-samza/issues</url>
-  </issueManagement>
 
   <repositories>
     <repository>

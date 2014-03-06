@@ -17,26 +17,25 @@
  * under the License.
  */
 
-package samza.examples.wikipedia.task;
+package tum.examples.transporte.task;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 import org.apache.samza.system.IncomingMessageEnvelope;
 import org.apache.samza.system.OutgoingMessageEnvelope;
 import org.apache.samza.system.SystemStream;
 import org.apache.samza.task.MessageCollector;
 import org.apache.samza.task.StreamTask;
 import org.apache.samza.task.TaskCoordinator;
-import samza.examples.wikipedia.system.WikipediaFeed.WikipediaFeedEvent;
+import tum.examples.transporte.system.TransporteFeed.TumFeedEvent;
 
 public class WikipediaParserStreamTask implements StreamTask {
   @SuppressWarnings("unchecked")
   @Override
   public void process(IncomingMessageEnvelope envelope, MessageCollector collector, TaskCoordinator coordinator) {
     Map<String, Object> jsonObject = (Map<String, Object>) envelope.getMessage();
-    WikipediaFeedEvent event = new WikipediaFeedEvent(jsonObject);
+    TumFeedEvent event = new TumFeedEvent(jsonObject);
 
     try {
       Map<String, Object> parsedJsonObject = new HashMap<String, Object>();
@@ -45,14 +44,14 @@ public class WikipediaParserStreamTask implements StreamTask {
       parsedJsonObject.put("type", event.getType());
       parsedJsonObject.put("time", event.getTime());
 
-      collector.send(new OutgoingMessageEnvelope(new SystemStream("kafka", "wikipedia-edits"), parsedJsonObject));
+      collector.send(new OutgoingMessageEnvelope(new SystemStream("kafka", "transporte-edits"), parsedJsonObject));
     } catch (Exception e) {
       System.err.println("Unable to parse line: " + event);
     }
   }
 
   public static void main(String[] args) {
-    String[] lines = new String[] { "[[Wikipedia talk:Articles for creation/Lords of War]]  http://en.wikipedia.org/w/index.php?diff=562991653&oldid=562991567 * BBGLordsofWar * (+95) /* Lords of War: Elves versus Lizardmen */]", "[[David Shepard (surgeon)]] M http://en.wikipedia.org/w/index.php?diff=562993463&oldid=562989820 * Jacobsievers * (+115) /* American Revolution (1775�1783) */  Added to note regarding David Shepard's brothers" };
+    String[] lines = new String[] { "[[Wikipedia talk:Articles for creation/Lords of War]]  http://en.transporte.org/w/index.php?diff=562991653&oldid=562991567 * BBGLordsofWar * (+95) /* Lords of War: Elves versus Lizardmen */]", "[[David Shepard (surgeon)]] M http://en.transporte.org/w/index.php?diff=562993463&oldid=562989820 * Jacobsievers * (+115) /* American Revolution (1775�1783) */  Added to note regarding David Shepard's brothers" };
 
     System.out.println(lines);
   }

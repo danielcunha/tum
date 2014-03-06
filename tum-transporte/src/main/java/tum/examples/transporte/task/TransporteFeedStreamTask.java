@@ -17,27 +17,28 @@
  * under the License.
  */
 
-package samza.examples.wikipedia.task;
+package tum.examples.transporte.task;
 
-import java.util.Map;
 import org.apache.samza.system.IncomingMessageEnvelope;
 import org.apache.samza.system.OutgoingMessageEnvelope;
 import org.apache.samza.system.SystemStream;
 import org.apache.samza.task.MessageCollector;
 import org.apache.samza.task.StreamTask;
 import org.apache.samza.task.TaskCoordinator;
-import samza.examples.wikipedia.system.WikipediaFeed.WikipediaFeedEvent;
+import tum.examples.transporte.system.TransporteFeed;
+
+import java.util.Map;
 
 /**
  * This task is very simple. All it does is take messages that it receives, and
- * sends them to a Kafka topic called wikipedia-raw.
+ * sends them to a Kafka topic called transporte-raw.
  */
-public class WikipediaFeedStreamTask implements StreamTask {
-  private static final SystemStream OUTPUT_STREAM = new SystemStream("kafka", "wikipedia-raw");
+public class TransporteFeedStreamTask implements StreamTask {
+  private static final SystemStream OUTPUT_STREAM = new SystemStream("kafka", "transporte-raw");
 
   @Override
   public void process(IncomingMessageEnvelope envelope, MessageCollector collector, TaskCoordinator coordinator) {
-    Map<String, Object> outgoingMap = WikipediaFeedEvent.toMap((WikipediaFeedEvent) envelope.getMessage());
+    Map<String, Object> outgoingMap = TransporteFeed.TumFeedEvent.toMap((TransporteFeed.TumFeedEvent) envelope.getMessage());
     collector.send(new OutgoingMessageEnvelope(OUTPUT_STREAM, outgoingMap));
   }
 }

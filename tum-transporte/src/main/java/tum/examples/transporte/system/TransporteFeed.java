@@ -17,85 +17,53 @@
  * under the License.
  */
 
-package samza.examples.wikipedia.system;
+package tum.examples.transporte.system;
 
 import org.apache.samza.SamzaException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.schwering.irc.lib.IRCEventListener;
-import org.schwering.irc.lib.IRCModeParser;
-import org.schwering.irc.lib.IRCUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class WikipediaFeed {
-	private static final Logger log = LoggerFactory.getLogger(WikipediaFeed.class);
+public class TransporteFeed extends Thread {
+
+	private static final Logger log = LoggerFactory.getLogger(TransporteFeed.class);
 	private static final Random random = new Random();
 	private static final ObjectMapper jsonMapper = new ObjectMapper();
+	private static final List<String> types = new ArrayList<String>();
 
-	private final Set<WikipediaFeedListener> listeners;
-
-
-	public WikipediaFeed() {
-		this.listeners =  new HashSet<WikipediaFeedListener>();
+	public TransporteFeed() {
+		types.addAll(Arrays.asList("Cadastro de trajeto", "Consulta por ônibus"));
 	}
 
-	public void start() {
-	}
+	@Override
+	public void run() {
+		while(true) {
+			TumFeedEvent evt = new TumFeedEvent(System.currentTimeMillis(),
+					"192.168.0."+(Math.round(Math.random()*254)),
+					types.get((int) Math.round((Math.random()*1))));
 
-	public void stop() {
-	}
-
-	public void listen(WikipediaFeedListener listener) {
-		listeners.add(listener);
-	}
-
-	public void unlisten(String channel, WikipediaFeedListener listener) {
-		if (listeners == null) {
-			throw new RuntimeException("Trying to unlisten to a channel that has no listeners in it.");
-		} else if (!listeners.contains(listener)) {
-			throw new RuntimeException("Trying to unlisten to a channel that listener is not listening to.");
+			System.out.println(evt);
 		}
-
-		listeners.remove(listener);
 	}
 
-	/*public class WikipediaFeedIrcListener implements IRCEventListener {
-		public void onPrivmsg(String chan, IRCUser u, String msg) {
-			Set<WikipediaFeedListener> listeners = mapListeners.get(chan);
-
-			if (listeners != null) {
-				WikipediaFeedEvent event = new WikipediaFeedEvent(System.currentTimeMillis(), chan, u.getNick(), msg);
-
-				for (WikipediaFeedListener listener : listeners) {
-					listener.onEvent(event);
-				}
-			}
-
-			log.debug(chan + "> " + u.getNick() + ": " + msg);
-		}
-	}*/
-
-	public static interface WikipediaFeedListener {
-		void onEvent(WikipediaFeedEvent event);
-	}
-
-	public static final class WikipediaFeedEvent {
+	public static final class TumFeedEvent {
 		private final long time;
 		private final String user;
 		private final String type;
 
 
-		public WikipediaFeedEvent(Map<String, Object> jsonObject) {
+		public TumFeedEvent(Map<String, Object> jsonObject) {
 			this((Long) jsonObject.get("time"), (String) jsonObject.get("user"), (String) jsonObject.get("type"));
 		}
 
-		public WikipediaFeedEvent(Long time, String user, String type) {
+		public TumFeedEvent(Long time, String user, String type) {
 			this.time = time;
 			this.user = user;
 			this.type = type;
 		}
+
 
 		public long getTime() {
 			return time;
@@ -114,7 +82,7 @@ public class WikipediaFeed {
 			if (this == o) return true;
 			if (o == null || getClass() != o.getClass()) return false;
 
-			WikipediaFeedEvent that = (WikipediaFeedEvent) o;
+			TumFeedEvent that = (TumFeedEvent) o;
 
 			if (time != that.time) return false;
 			if (type != null ? !type.equals(that.type) : that.type != null) return false;
@@ -133,14 +101,14 @@ public class WikipediaFeed {
 
 		@Override
 		public String toString() {
-			return "WikipediaFeedEvent [time=" + time + ", user=" + user + ", type=" + type + "]";
+			return "TumFeedEvent [time=" + time + ", user=" + user + ", type=" + type + "]";
 		}
 
 		public String toJson() {
 			return toJson(this);
 		}
 
-		public static Map<String, Object> toMap(WikipediaFeedEvent event) {
+		public static Map<String, Object> toMap(TumFeedEvent event) {
 			Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 			jsonObject.put("time", event.getTime());
@@ -150,7 +118,7 @@ public class WikipediaFeed {
 			return jsonObject;
 		}
 
-		public static String toJson(WikipediaFeedEvent event) {
+		public static String toJson(TumFeedEvent event) {
 			Map<String, Object> jsonObject = toMap(event);
 
 			try {
@@ -161,9 +129,9 @@ public class WikipediaFeed {
 		}
 
 		@SuppressWarnings("unchecked")
-		public static WikipediaFeedEvent fromJson(String json) {
+		public static TumFeedEvent fromJson(String json) {
 			try {
-				return new WikipediaFeedEvent((Map<String, Object>) jsonMapper.readValue(json, Map.class));
+				return new TumFeedEvent((Map<String, Object>) jsonMapper.readValue(json, Map.class));
 			} catch (Exception e) {
 				throw new SamzaException(e);
 			}
@@ -171,17 +139,17 @@ public class WikipediaFeed {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		WikipediaFeed feed = new WikipediaFeed();
+		TransporteFeed feed = new TransporteFeed();
 		feed.start();
 
-		feed.listen(new WikipediaFeedListener() {
-			@Override
-			public void onEvent(WikipediaFeedEvent event) {
-				System.out.println(event);
-			}
-		});
 
-		Thread.sleep(20000);
-		feed.stop();
+//		feed.listen(new TumFeedListener() {
+//			@Override
+//			public void onEvent(TumFeedEvent event) {
+//				System.out.println(event);
+//			}
+//		});
+
+		Thread.sleep(100);
 	}
 }
