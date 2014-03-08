@@ -19,31 +19,47 @@
 
 package tum.examples.transporte.system;
 
+import org.apache.samza.Partition;
 import org.apache.samza.metrics.MetricsRegistry;
+import org.apache.samza.system.IncomingMessageEnvelope;
 import org.apache.samza.system.SystemStreamPartition;
 import org.apache.samza.util.BlockingEnvelopeMap;
 
-public class TransporteConsumer extends BlockingEnvelopeMap {
-  private final String systemName;
-  private final TransporteFeed feed;
+public class TransporteConsumer extends BlockingEnvelopeMap implements TransporteFeed.TransporteFeedListener {
+	private final String systemName;
+	private final TransporteFeed feed;
 
-  public TransporteConsumer(String systemName, TransporteFeed feed, MetricsRegistry registry) {
-    this.systemName = systemName;
-    this.feed = feed;
-  }
+	public TransporteConsumer(String systemName, TransporteFeed feed, MetricsRegistry registry) {
+		this.systemName = systemName;
+		this.feed = feed;
+	}
 
-  @Override
-  public void register(SystemStreamPartition systemStreamPartition, String startingOffset) {
-    super.register(systemStreamPartition, startingOffset);
-  }
 
-  @Override
-  public void start() {
-    feed.start();
-  }
+	@Override
+	public void register(SystemStreamPartition systemStreamPartition, String startingOffset) {
+		super.register(systemStreamPartition, startingOffset);
+	}
 
-  @Override
-  public void stop() {
-    feed.interrupt();
-  }
+	@Override
+	public void start() {
+		feed.listen(this);
+		feed.start();
+	}
+
+	@Override
+	public void stop() {
+		feed.unlisten(this);
+		feed.interrupt();
+	}
+
+	@Override
+	public void onEvent(TransporteFeedEvent event) {
+		SystemStreamPartition systemStreamPartition = new SystemStreamPartition(systemName, "transporte.users", new Partition(0));
+
+		try {
+			put(systemStreamPartition, new IncomingMessageEnvelope(systemStreamPartition, null, null, event));
+		} catch (Exception e) {
+			System.err.println(e);
+		}
+	}
 }

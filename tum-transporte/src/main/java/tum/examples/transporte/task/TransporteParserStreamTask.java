@@ -27,18 +27,26 @@ import org.apache.samza.task.StreamTask;
 import org.apache.samza.task.TaskCoordinator;
 import tum.examples.transporte.system.TransporteFeedEvent;
 
+import java.util.HashMap;
 import java.util.Map;
 
-/**
- * This task is very simple. All it does is take messages that it receives, and
- * sends them to a Kafka topic called transporte-raw.
- */
-public class TransporteFeedStreamTask implements StreamTask {
-	private static final SystemStream OUTPUT_STREAM = new SystemStream("kafka", "transporte-raw");
-
+public class TransporteParserStreamTask implements StreamTask {
+	@SuppressWarnings("unchecked")
 	@Override
 	public void process(IncomingMessageEnvelope envelope, MessageCollector collector, TaskCoordinator coordinator) {
-		Map<String, Object> outgoingMap = TransporteFeedEvent.toMap((TransporteFeedEvent) envelope.getMessage());
-		collector.send(new OutgoingMessageEnvelope(OUTPUT_STREAM, outgoingMap));
+		Map<String, Object> jsonObject = (Map<String, Object>) envelope.getMessage();
+		TransporteFeedEvent event = new TransporteFeedEvent(jsonObject);
+
+		try {
+			Map<String, Object> parsedJsonObject = new HashMap<String, Object>();
+
+			parsedJsonObject.put("user", event.getUser());
+			parsedJsonObject.put("type", event.getType());
+			parsedJsonObject.put("time", event.getTime());
+
+			collector.send(new OutgoingMessageEnvelope(new SystemStream("kafka", "transporte-evts"), parsedJsonObject));
+		} catch (Exception e) {
+			System.err.println("Unable to parse line: " + event);
+		}
 	}
 }

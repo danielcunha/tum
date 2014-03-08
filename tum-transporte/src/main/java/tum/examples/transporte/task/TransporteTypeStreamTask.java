@@ -19,10 +19,8 @@
 
 package tum.examples.transporte.task;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 import org.apache.samza.system.IncomingMessageEnvelope;
 import org.apache.samza.system.OutgoingMessageEnvelope;
 import org.apache.samza.system.SystemStream;
@@ -31,48 +29,42 @@ import org.apache.samza.task.StreamTask;
 import org.apache.samza.task.TaskCoordinator;
 import org.apache.samza.task.WindowableTask;
 
-public class WikipediaStatsStreamTask implements StreamTask, WindowableTask {
-  private int edits = 0;
-  private int byteDiff = 0;
-  private Set<String> titles = new HashSet<String>();
-  private Map<String, Integer> counts = new HashMap<String, Integer>();
+public class TransporteTypeStreamTask implements StreamTask, WindowableTask {
 
-  @SuppressWarnings("unchecked")
+	private int evts = 0;
+	private Map<String, List<Object>> groups = new HashMap<String, List<Object>>();
+	private Map<String, Integer> counts = new HashMap<String, Integer>();
+
+	@SuppressWarnings("unchecked")
   @Override
   public void process(IncomingMessageEnvelope envelope, MessageCollector collector, TaskCoordinator coordinator) {
-    Map<String, Object> edit = (Map<String, Object>) envelope.getMessage();
-    Map<String, Boolean> flags = (Map<String, Boolean>) edit.get("flags");
 
-    edits += 1;
-    titles.add((String) edit.get("title"));
-    byteDiff += (Integer) edit.get("diff-bytes");
+    Map<String, Object> evt = (Map<String, Object>) envelope.getMessage();
+	List<Object> evts = null;
 
-    for (Map.Entry<String, Boolean> flag : flags.entrySet()) {
-      if (Boolean.TRUE.equals(flag.getValue())) {
-        Integer count = counts.get(flag.getKey());
+	if(counts.containsKey(evt.get("type"))) {
+		evts = ((List) groups.get(evt.get("type")));
+	} else {
+		evts = new ArrayList<Object>();
+	}
 
-        if (count == null) {
-          count = 0;
-        }
-
-        count += 1;
-        counts.put(flag.getKey(), count);
-      }
-    }
+	evts.add(evt);
+	groups.put((String) evt.get("type"), evts);
   }
 
   @Override
   public void window(MessageCollector collector, TaskCoordinator coordinator) {
-    counts.put("edits", edits);
-    counts.put("bytes-added", byteDiff);
-    counts.put("unique-titles", titles.size());
+	for(String key : groups.keySet()) {
+		counts.put(key, groups.get(key).size());
+	}
+	counts.put("total", evts);
 
-    collector.send(new OutgoingMessageEnvelope(new SystemStream("kafka", "transporte-stats"), counts));
+	collector.send(new OutgoingMessageEnvelope(new SystemStream("kafka", "transporte-types-counts"), counts));
+	collector.send(new OutgoingMessageEnvelope(new SystemStream("kafka", "transporte-types-groups"), counts));
 
-    // Reset counts after windowing.
-    edits = 0;
-    byteDiff = 0;
-    titles = new HashSet<String>();
-    counts = new HashMap<String, Integer>();
+    // Reset groups after windowing.
+	 evts = 0;
+	groups = new HashMap<String, List<Object>>();
+	counts = new HashMap<String, Integer>();
   }
 }

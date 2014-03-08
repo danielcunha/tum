@@ -87,7 +87,7 @@
 
   <modules>
     <module>samza-job-package</module>
-    <module>tum-transorte</module>
+    <module>tum-transporte</module>
   </modules>
 
   <repositories>

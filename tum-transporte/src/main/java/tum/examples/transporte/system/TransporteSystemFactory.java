@@ -29,18 +29,18 @@ import org.apache.samza.system.SystemProducer;
 import org.apache.samza.util.SinglePartitionWithoutOffsetsSystemAdmin;
 
 public class TransporteSystemFactory implements SystemFactory {
-  @Override
-  public SystemAdmin getAdmin(String systemName, Config config) {
-    return new SinglePartitionWithoutOffsetsSystemAdmin();
-  }
+	@Override
+	public SystemAdmin getAdmin(String systemName, Config config) {
+		return new SinglePartitionWithoutOffsetsSystemAdmin();
+	}
 
-  @Override
-  public SystemConsumer getConsumer(String systemName, Config config, MetricsRegistry registry) {
-    return new TransporteConsumer(systemName, new TransporteFeed(), registry);
-  }
+	@Override
+	public SystemConsumer getConsumer(String systemName, Config config, MetricsRegistry registry) {
+		return new TransporteConsumer(systemName, new TransporteFeed(), registry);
+	}
 
-  @Override
-  public SystemProducer getProducer(String systemName, Config config, MetricsRegistry registry) {
-    throw new SamzaException("Você não pode produzir itens em um Tum Feed! O stream inicial vem de um componente externo!");
-  }
+	@Override
+	public SystemProducer getProducer(String systemName, Config config, MetricsRegistry registry) {
+		throw new SamzaException("Você não pode produzir itens em um Tum Feed! O stream inicial vem de um componente externo!");
+	}
 }
