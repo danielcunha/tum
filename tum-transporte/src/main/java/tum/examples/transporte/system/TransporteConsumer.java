@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package tum.examples.transporte.system;
 
 import org.apache.samza.Partition;
@@ -48,14 +47,14 @@ public class TransporteConsumer extends BlockingEnvelopeMap implements Transport
 
 	@Override
 	public void stop() {
+
 		feed.unlisten(this);
 		feed.interrupt();
 	}
 
 	@Override
 	public void onEvent(TransporteFeedEvent event) {
-		SystemStreamPartition systemStreamPartition = new SystemStreamPartition(systemName, "transporte.users", new Partition(0));
-
+		SystemStreamPartition systemStreamPartition = new SystemStreamPartition(systemName, "users", new Partition(0));
 		try {
 			put(systemStreamPartition, new IncomingMessageEnvelope(systemStreamPartition, null, null, event));
 		} catch (Exception e) {

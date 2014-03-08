@@ -38,6 +38,7 @@ public class TransporteFeedStreamTask implements StreamTask {
 
 	@Override
 	public void process(IncomingMessageEnvelope envelope, MessageCollector collector, TaskCoordinator coordinator) {
+		System.out.println("processsing>>>" + envelope);
 		Map<String, Object> outgoingMap = TransporteFeedEvent.toMap((TransporteFeedEvent) envelope.getMessage());
 		collector.send(new OutgoingMessageEnvelope(OUTPUT_STREAM, outgoingMap));
 	}

@@ -45,9 +45,13 @@ public class TransporteFeed extends Thread {
 			TransporteFeedEvent evt = new TransporteFeedEvent(System.currentTimeMillis(),
 					"192.168.0."+(Math.round(Math.random()*254)),
 					types.get((int) Math.round((Math.random()*1))));
-
 			for (TransporteFeedListener listener : listeners) {
 				listener.onEvent(evt);
+			}
+			try {
+				sleep(50);
+			} catch (InterruptedException e) {
+				System.err.println(e);
 			}
 		}
 	}

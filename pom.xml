@@ -86,7 +86,7 @@
   </properties>
 
   <modules>
-    <module>samza-job-package</module>
+    <module>tum-job-package</module>
     <module>tum-transporte</module>
   </modules>
 
@@ -118,7 +118,7 @@
   <build>
     <pluginManagement>
       <plugins>
-        <plugin>
+        <!---plugin>
           <groupId>org.apache.rat</groupId>
           <artifactId>apache-rat-plugin</artifactId>
           <version>0.9</version>
@@ -135,7 +135,7 @@
               <exclude>deploy/**</exclude>
             </excludes>
           </configuration>
-        </plugin>
+        </plugin-->
       </plugins>
     </pluginManagement>
     <plugins>
@@ -148,7 +148,7 @@
           <target>1.6</target>
         </configuration>
       </plugin>
-      <plugin>
+      <!--plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
         <version>0.9</version>
@@ -160,7 +160,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin-->
       <plugin>
         <artifactId>maven-install-plugin</artifactId>
         <version>2.3.1</version>

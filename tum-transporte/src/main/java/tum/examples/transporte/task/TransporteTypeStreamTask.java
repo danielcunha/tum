@@ -60,7 +60,7 @@ public class TransporteTypeStreamTask implements StreamTask, WindowableTask {
 	counts.put("total", evts);
 
 	collector.send(new OutgoingMessageEnvelope(new SystemStream("kafka", "transporte-types-counts"), counts));
-	collector.send(new OutgoingMessageEnvelope(new SystemStream("kafka", "transporte-types-groups"), counts));
+	collector.send(new OutgoingMessageEnvelope(new SystemStream("kafka", "transporte-types-groups"), groups));
 
     // Reset groups after windowing.
 	 evts = 0;
